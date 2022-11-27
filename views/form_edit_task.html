@@ -10,7 +10,9 @@
     <input type="radio" name="priority" value="0" {{ if eq .Task.Priority 0 }}checked{{ end }}><label>優先度高</label>
     <input type="radio" name="priority" value="1" {{ if eq .Task.Priority 1 }}checked{{ end }}><label>優先度中</label>
     <input type="radio" name="priority" value="2" {{ if eq .Task.Priority 2 }}checked{{ end }}><label>優先度低</label>
+    </br>
     <input type="date" name="deadline" value="{{ .Task.Deadline.Format " 2006/01/02" }}" required>
+    <br>
     <input type="submit" value="登録">
     <a href="/task/{{ .Task.ID }}"><button type="button">戻る</button></a>
 </form>
