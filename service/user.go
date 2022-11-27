@@ -128,7 +128,7 @@ func Login(ctx *gin.Context) {
 func LoginForm(ctx *gin.Context) {
 	// ログインしているか確認
 	if sessions.Default(ctx).Get("user") != nil {
-		ctx.HTML(http.StatusBadRequest, "task_list.html", gin.H{"Title": "List of Tasks", "Error": "You are already logged in"})
+		ctx.Redirect(http.StatusFound, "/list")
 		return
 	}
 
