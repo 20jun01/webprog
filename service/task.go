@@ -157,6 +157,7 @@ func RegisterTask(ctx *gin.Context) {
 }
 
 func EditTaskForm(ctx *gin.Context) {
+	userID := sessions.Default(ctx).Get("user")
 	// ID の取得
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -169,6 +170,19 @@ func EditTaskForm(ctx *gin.Context) {
 		Error(http.StatusInternalServerError, err.Error())(ctx)
 		return
 	}
+
+	// Get a owner with given ID
+	var owner uint64
+	err = db.Get(&owner, "SELECT user_id FROM ownership WHERE task_id=?", id) // Use DB#Get for one entry
+	if err != nil {
+		Error(http.StatusBadRequest, err.Error())(ctx)
+		return
+	}
+	if owner != userID {
+		Error(http.StatusBadRequest, "You are not owner of this task")(ctx)
+		return
+	}
+
 	// Get target task
 	var task database.Task
 	err = db.Get(&task, "SELECT * FROM tasks WHERE id=?", id)
@@ -182,6 +196,7 @@ func EditTaskForm(ctx *gin.Context) {
 }
 
 func EditTask(ctx *gin.Context) {
+	userID := sessions.Default(ctx).Get("user")
 	// ID の取得
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -201,6 +216,19 @@ func EditTask(ctx *gin.Context) {
 		Error(http.StatusBadRequest, err.Error())(ctx)
 		return
 	}
+
+	// Get a owner with given ID
+	var owner uint64
+	err = db.Get(&owner, "SELECT user_id FROM ownership WHERE task_id=?", id) // Use DB#Get for one entry
+	if err != nil {
+		Error(http.StatusBadRequest, err.Error())(ctx)
+		return
+	}
+	if owner != userID {
+		Error(http.StatusBadRequest, "You are not owner of this task")(ctx)
+		return
+	}
+
 	// Update task
 	task.Title, _ = ctx.GetPostForm("title")
 	task.Description, _ = ctx.GetPostForm("description")
