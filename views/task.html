@@ -1,0 +1,43 @@
+{{ template "header" . }}
+<h1>Task: {{ .Title }}</h1>
+<dl>
+    <dt>ID</dt>
+    <dd>{{ .ID }}</dd>
+    <dt>Created at</dt>
+    <dd>{{ .CreatedAt.Format "2006/01/02" }}</dd>
+    <dt>Status</dt>
+    <dd><input type="checkbox" {{ if .IsDone }}checked {{ end }}disabled />済</dd>
+    <dt>Description</dt>
+    <dd>{{ .Description }}</dd>
+    <dt>Priority</dt>
+    <dd>{{ if eq .Priority 0 }}優先度高{{ end }}{{ if eq .Priority 1 }}優先度中{{ end }}{{ if eq .Priority 2 }}優先度低{{ end }}
+    </dd>
+    <dt>Deadline</dt>
+    <dd>{{ .Deadline.Format "2006/01/02" }}</dd>
+    <dt>CountDown</dt>
+    <dd id="js-timer"></dd>
+</dl>
+<a href="/list"><button type="button">リストへ戻る</button></a>
+<a href="/task/edit/{{ .ID }}"><button type="button">編集</button></a>
+<button type="button" onclick="confirm_delete({{ .ID }})">削除</button>
+<script>
+    function countdown(deadline) {
+        var settime;
+        var timer = document.getElementById('js-timer');
+        var h = 0;
+        var m = 0;
+        var s = 0;
+        var d = 0;
+        settime = parseInt((Date.parse(deadline) - Date.now()) / 1000);
+        d = Math.floor(settime / 86400);
+        h = Math.floor((settime % 86400) / 3600);
+        m = Math.floor(settime / 60) % 60;
+        s = (settime % 60) % 60;
+        timer.innerHTML = '残り' + d + '日' + h + '時間' + m + '分' + s + '秒';
+        if (settime <= 0) {
+            timer.innerHTML = '時間切れ';
+        }
+    };
+    setInterval(countdown, 1000, {{ .Deadline }});
+</script>
+{{ template "footer" }}

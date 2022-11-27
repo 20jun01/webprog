@@ -1,0 +1,14 @@
+{{ template "header" . }}
+<h1>ユーザ退会</h1>
+{{ if .Error }}
+<p>
+    <font color="#FF0000">{{ .Error }}</font>
+<p>
+    {{ end }}
+<form action="/user/delete" method="POST">
+    <label>パスワード: </label><input type="text" name="password" value="{{ .Password }}" required><br>
+    <label>パスワード確認:</label><input type="text" name="password_confirm" value="{{ .PasswordConfirm }}" required><br>
+    <input type="submit" value="退会">
+</form>
+<a href="/"><button type="button">戻る</button></a>
+{{ template "footer" }}

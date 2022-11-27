@@ -1,0 +1,22 @@
+{{ template "header" . }}
+<h1>Task {{ .Task.ID }}: edit</h1>
+<form action="/task/edit/{{ .Task.ID }}" method="POST" onSubmit="return confirm_update()">
+    <label>Title</label><input type="text" name="title" value="{{ .Task.Title }}" required><br>
+    <label>Description</label><input type="text" name="description" value="{{ .Task.Description }}" required>
+    <br>
+    <input type="radio" name="is_done" value="t" {{ if .Task.IsDone }}checked{{ end }}><label>完了</label>
+    <input type="radio" name="is_done" value="f" {{ if not .Task.IsDone }}checked{{ end }}><label>未完了</label>
+    </br>
+    <input type="radio" name="priority" value="0" {{ if eq .Task.Priority 0 }}checked{{ end }}><label>優先度高</label>
+    <input type="radio" name="priority" value="1" {{ if eq .Task.Priority 1 }}checked{{ end }}><label>優先度中</label>
+    <input type="radio" name="priority" value="2" {{ if eq .Task.Priority 2 }}checked{{ end }}><label>優先度低</label>
+    <input type="date" name="deadline" value="{{ .Task.Deadline.Format " 2006/01/02" }}" required>
+    <input type="submit" value="登録">
+    <a href="/task/{{ .Task.ID }}"><button type="button">戻る</button></a>
+</form>
+<script type="text/javascript">
+    const confirm_update = (id) => {
+        return window.confirm(`Task ${id} を編集します．よろしいですか？`)
+    }
+</script>
+{{ template "footer" }}

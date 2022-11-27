@@ -1,0 +1,21 @@
+{{ template "header" . }}
+<h1>ユーザ情報変更</h1>
+{{ if .Error }}
+<p>
+    <font color="#FF0000">{{ .Error }}</font>
+<p>
+    {{ end }}
+<form action="/user/edit" method="POST" onsubmit="return confirm_update()">
+    <label>ユーザ名: </label><input type="text" name="username" value="{{ .Username }}" required><br>
+    <label>パスワード: </label><input type="text" name="password" value="{{ .Password }}" required><br>
+    <label>パスワード(新規): </label><input type="text" name="password_new" value="{{ .PasswordNew }}" required><br>
+    ※変更が必要ない場合は、現在のパスワードを入力してください。
+    <input type="submit" value="変更">
+</form>
+<a href="/"><button type="button">TOPに戻る</button></a>
+<script type="text/javascript">
+    const confirm_update = (id) => {
+        return window.confirm(`ユーザー情報を変更します．よろしいですか？`)
+    }
+</script>
+{{ template "footer" }}
